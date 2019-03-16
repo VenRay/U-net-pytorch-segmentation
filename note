@@ -1,0 +1,61 @@
+1,device = torch.device("cuda" ) 决定是否使用cuda
+2,transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
+])
+R,G,B三个波段的均值和方差
+transforms.ToTensor()]
+'Epoch {}/{}'.format(epoch, num_epochs - 1) 字符串格式
+3,pytorch数据读入
+（1）torch.utils.data.Dataset
+是一个抽象类, 自定义的Dataset需要继承它并且实现两个成员方法:
+__getitem__()
+__len__()
+第一个最为重要, 即每次怎么读数据. 以图片为例:
+就是返回整个数据集的长度:
+from torch.utils.data import DataLoader
+class torch.utils.data.DataLoader(dataset, batch_size=1,  num_workers=0)
+dataset : 即上面自定义的datasetdataset : 即上面自定义的dataset
+num_worker: 简单的多线程方法
+4.模型建立
+class Unet(nn.Module):
+    def __init__(self,in_ch,out_ch):#通道
+    def forward(self,x):
+    return out
+class DoubleConv(nn.Module):
+    def __init__(self, in_ch, out_ch):
+        super(DoubleConv, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(in_ch, out_ch, 3, padding=1),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_ch, out_ch, 3, padding=1),
+            nn.BatchNorm2d(out_ch),
+            nn.ReLU(inplace=True)
+        )
+
+    def forward(self, input):
+        return self.conv(input)
+5,模型权重导入
+# 保存整个网络
+torch.save(net, PATH)
+# 保存网络中的参数, 速度快，占空间少
+torch.save(net.state_dict(),PATH)
+
+model_dict=torch.load(PATH)
+model_dict=model.load_state_dict(torch.load(PATH))
+
+
+torch.save({'epoch': epochID + 1, 'state_dict': model.state_dict(), 'best_loss': lossMIN,
+                            'optimizer': optimizer.state_dict(),'alpha': loss.alpha, 'gamma': loss.gamma},
+                           checkpoint_path + '/m-' + launchTimestamp + '-' + str("%.4f" % lossMIN) + '.pth.tar'
+
+def load_checkpoint(model, checkpoint_PATH, optimizer):
+    if checkpoint != None:
+        model_CKPT = torch.load(checkpoint_PATH)
+        model.load_state_dict(model_CKPT['state_dict'])
+        print('loading checkpoint!')
+        optimizer.load_state_dict(model_CKPT['optimizer'])
+    return model, optimizer
+
+#倘若维度不一致需要重新弄维度
